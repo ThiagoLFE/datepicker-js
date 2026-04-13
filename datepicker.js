@@ -24,10 +24,10 @@ function offsetOfFirstDay(year, month){
 }
 
 export class Datepicker {
-	constructor(year, month, config = {}) {
+	constructor(config = {}) {
 		const now = new Date();
-		this.year      = year ?? now.getFullYear();
-		this.month     = month ?? now.getMonth();
+		this.year      = config.year ?? now.getFullYear();
+		this.month     = config.month ?? now.getMonth();
 		this.startDate = null;
 		this.endDate   = null;
 
