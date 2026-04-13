@@ -93,7 +93,9 @@ class Datepicker {
 		const dayOffset = offsetOfFirstDay(year, month);
 		const numDays   = daysInMonth(year, month);
 
-		for(let i = 0; i < 35; i++){
+		const startsOnFriday = dayOffset >= 5;
+
+		for(let i = 0; i < 42; i++){
 			let btn   = document.createElement('button');
 			let day   = i + 1 - dayOffset;
 			let value;
@@ -102,14 +104,17 @@ class Datepicker {
 
 			if(day > numDays){
 				btn.setAttribute('disabled', true);
+
 				inCurrentMonth = false;
 				day = i - numDays + 1 - dayOffset;
 				value = new Date(year, month + 1, day);
 			}
 			else if(day <= 0){
+				btn.setAttribute('disabled', true);
+
 				inCurrentMonth = false;
 				day = daysInPreviousMonth(year, month)
-					- offsetOfFirstDay(year, month) + i + 1;
+					- dayOffset + i + 1;
 				value = new Date(year, month - 1, day);
 			}
 			else {
@@ -205,10 +210,10 @@ class Datepicker {
 }
 
 const picker = new Datepicker(2026, 8, {
-	ranged: false,
+	ranged: true,
 	onSelect: (start, end) => console.log([start, end]),
-	minDate: new Date(),
-	double: false,
+	// minDate: new Date(),
+	double: true,
 });
 
 picker.mount(document.querySelector("body"));
