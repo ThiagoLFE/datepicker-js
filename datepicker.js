@@ -49,7 +49,7 @@ for(let i = 0; i < weekdayLabels.length; i++){
 }
 
 let currentYear = 2026;
-let currentMonth = 6; // NOTE: Zero indexed because JS
+let currentMonth = 11; // NOTE: Zero indexed because JS
 let dayOffset = offsetOfFirstDay(currentYear, currentMonth);
 
 console.log(new Date(currentYear, currentMonth, 1));
@@ -59,27 +59,37 @@ let daysInCurrentMonth = daysInMonth(currentYear, currentMonth);
 
 for(let i = 0; i < 35; i++){
 	let btn = document.createElement('button');
+	let day = i + 1 - dayOffset;
+	let value = new Date(currentYear, currentMonth, 1);
 
-	let value = i + 1 - dayOffset;
+	if(day > daysInCurrentMonth){
+		btn.setAttribute('disabled', true);
+		day = i - daysInCurrentMonth + 1 - dayOffset;
 
-	if(value > daysInCurrentMonth){
+		value.setDate(value.getDate() + daysInCurrentMonth);
+	}
+	else if(day <= 0){
 		btn.setAttribute('disabled', true);
-		value = i - daysInCurrentMonth + 1 - dayOffset;
-	} else if(value <= 0){
-		btn.setAttribute('disabled', true);
-		value = daysInPreviousMonth(currentYear, currentMonth)
+		day = daysInPreviousMonth(currentYear, currentMonth)
 			- offsetOfFirstDay(currentYear, currentMonth) + i + 1;
+
+		value.setDate(value.getDate() - 1);
+	}
+	else {
+		value.setDate(day);
 	}
 
 	btn.addEventListener('click', (ev) => {
 		ev.preventDefault();
-		console.log(value);
+		console.log(value.toISOString()); // TODO: Callback here (val) => { ... }
 	});
 
-	btn.innerText = value;
+	btn.innerText = day;
 	picker.appendChild(btn);
 }
 
 body.appendChild(picker)
 
-assert(dayOffset >= 0 && dayOffset<= 6, "Invalid offset. Must be 0..=6")
+class Datepicker {
+}
+
