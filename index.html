@@ -1,15 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Page Title</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-	[Datepicker]
-    <script type="module" src="datepicker.js" defer></script>
-</body>
-</html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Page Title</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        [Datepicker]
+        <script type="module" src="datepicker.js"></script>
 
+        <script type="module">
+            import { Datepicker } from "./datepicker.js";
+            new Datepick.Datepicker(2026, 4, {
+                ranged: true,
+                double: true,
+                onSelect: (begin, end) => {
+                    console.log([begin, end]);
+                },
+            }).mount("body");
+        </script>
+    </body>
+</html>
