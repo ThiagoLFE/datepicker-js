@@ -8,9 +8,6 @@ function assert(pred, msg){
 
 function daysInMonth(year, month) {
 	assert((month >= 0) && (month <= 11), `Invalid month: ${month}. Must be 1..=12`);
-	// NOTE: Using 0-day makes it take the final day of the LAST month, so we
-	// take the 0th day of the NEXT month to get the last day of the CURRENT
-	// one.
 	return new Date(year, month + 1, 0).getDate();
 }
 
@@ -27,13 +24,31 @@ function offsetOfFirstDay(year, month){
 class Datepicker {
 	constructor(year, month, onSelect) {
 		const now = new Date();
-		this.year  = year  ?? now.getFullYear();
-		this.month = month ?? now.getMonth();
-		this.onSelect = onSelect ?? null;
+		this.year      = year ?? now.getFullYear();
+		this.month     = month ?? now.getMonth();
+		this.onSelect  = onSelect ?? null;
+		this.startDate = null;
+		this.endDate   = null;
 
 		this.element = document.createElement('div');
 		this.element.className = 'datepicker';
 
+		this._render();
+	}
+
+	_handleClick(date) {
+		if(!this.startDate || (this.startDate && this.endDate)){
+			this.startDate = date;
+			this.endDate   = null;
+		} else {
+			if(date < this.startDate){
+				this.endDate   = this.startDate;
+				this.startDate = date;
+			} else {
+				this.endDate = date;
+			}
+			if(this.onSelect) this.onSelect(this.startDate, this.endDate);
+		}
 		this._render();
 	}
 
@@ -69,9 +84,20 @@ class Datepicker {
 				value.setDate(day);
 			}
 
+			if(this.startDate && this.endDate){
+				const t = value.getTime();
+				if(t === this.startDate.getTime() || t === this.endDate.getTime()){
+					btn.classList.add('datepicker-selected');
+				} else if(value > this.startDate && value < this.endDate){
+					btn.classList.add('datepicker-range');
+				}
+			} else if(this.startDate && value.getTime() === this.startDate.getTime()){
+				btn.classList.add('datepicker-selected');
+			}
+
 			btn.addEventListener('click', (ev) => {
 				ev.preventDefault();
-				if(this.onSelect) this.onSelect(value);
+				this._handleClick(value);
 			});
 
 			btn.innerText = day;
@@ -84,6 +110,5 @@ class Datepicker {
 	}
 }
 
-const picker = new Datepicker(2026, 10, (v) => console.log(v));
+const picker = new Datepicker(2026, 10, (start, end) => console.log([start, end]));
 picker.mount(document.querySelector("body"));
-

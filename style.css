@@ -25,3 +25,15 @@ body {
 .datepicker button:disabled {
 	color: #898989;
 }
+
+.datepicker button.datepicker-selected {
+	background: #4a90d9;
+	color: #fff;
+	border-color: #4a90d9;
+}
+
+.datepicker button.datepicker-range {
+	background: #1e3a5f;
+	color: #c8dff5;
+	border-color: #2a5080;
+}
