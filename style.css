@@ -12,12 +12,16 @@ body {
 }
 
 .datepicker.double {
-	width: auto;
+	width: fit-content;
 }
 
 .datepicker-months {
 	display: flex;
 	gap: 12px;
+}
+
+.datepicker-header {
+	width: 100%;
 }
 
 .datepicker-header {
@@ -28,6 +32,8 @@ body {
 
 .datepicker-header span {
 	font-size: 0.85rem;
+	flex: 1;
+	text-align: center;
 }
 
 .datepicker-grid {
