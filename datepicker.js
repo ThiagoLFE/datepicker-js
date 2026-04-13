@@ -45,32 +45,37 @@ class Datepicker {
 			if(!this.startDate || (this.startDate && this.endDate)){
 				this.startDate = date;
 				this.endDate   = null;
-			} else {
+			}
+			else {
 				if(date < this.startDate){
 					this.endDate   = this.startDate;
 					this.startDate = date;
 				} else {
 					this.endDate = date;
 				}
-				if(this.onSelect) this.onSelect(this.startDate, this.endDate);
+				if(this.onSelect){
+					this.onSelect(this.startDate, this.endDate);
+				}
 			}
-		} else {
+		}
+		else {
 			this.startDate = date;
 			this.endDate   = null;
-			if(this.onSelect) this.onSelect(this.startDate);
+			if(this.onSelect)
+				this.onSelect(this.startDate);
 		}
 		this._render();
 	}
 
 	_prevMonth() {
-		if(this.month === 0){ this.month = 11; this.year--; }
-		else { this.month--; }
+		if(this.month === 0){ this.month = 11; this.year -= 1; }
+		else { this.month -= 1; }
 		this._render();
 	}
 
 	_nextMonth() {
-		if(this.month === 11){ this.month = 0; this.year++; }
-		else { this.month++; }
+		if(this.month === 11){ this.month = 0; this.year += 1; }
+		else { this.month += 1; }
 		this._render();
 	}
 
@@ -164,8 +169,10 @@ class Datepicker {
 		if(this.double){
 			const label1 = document.createElement('span');
 			label1.innerText = fmtMonth(this.year, this.month);
+
 			const label2 = document.createElement('span');
 			label2.innerText = fmtMonth(nextYear, nextMonth);
+
 			header.appendChild(prevBtn);
 			header.appendChild(label1);
 			header.appendChild(label2);
@@ -180,7 +187,7 @@ class Datepicker {
 
 		this.element.appendChild(header);
 
-		// Grid(s)
+		// Grid
 		if(this.double){
 			const months = document.createElement('div');
 			months.className = 'datepicker-months';
