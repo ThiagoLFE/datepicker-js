@@ -1,0 +1,27 @@
+body {
+	background: #141414;
+	color: beige;
+}
+
+.datepicker {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 2px;
+	width: 240px;
+	font-family: monospace;
+}
+
+.datepicker button {
+	background: #1e1e1e;
+	color: beige;
+	padding: 0.25rem;
+	border: solid gray 1px;
+}
+
+.datepicker button:hover {
+	background: #444444;
+}
+
+.datepicker button:disabled {
+	color: #898989;
+}
