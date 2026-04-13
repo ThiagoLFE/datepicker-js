@@ -92,13 +92,17 @@ class Datepicker {
 			let day   = i + 1 - dayOffset;
 			let value = new Date(year, month, 1);
 
+			let inCurrentMonth = true;
+
 			if(day > numDays){
 				btn.setAttribute('disabled', true);
+				inCurrentMonth = false;
 				day = i - numDays + 1 - dayOffset;
 				value.setDate(value.getDate() + numDays);
 			}
 			else if(day <= 0){
 				btn.setAttribute('disabled', true);
+				inCurrentMonth = false;
 				day = daysInPreviousMonth(year, month)
 					- offsetOfFirstDay(year, month) + i + 1;
 				value.setDate(value.getDate() - 1);
@@ -111,7 +115,7 @@ class Datepicker {
 				btn.setAttribute('disabled', true);
 			}
 
-			if(this.startDate && this.endDate){
+			if(inCurrentMonth && this.startDate && this.endDate){
 				const t = value.getTime();
 				if(t === this.startDate.getTime() || t === this.endDate.getTime()){
 					btn.classList.add('datepicker-selected');
@@ -120,7 +124,7 @@ class Datepicker {
 					btn.classList.add('datepicker-range');
 				}
 			}
-			else if(this.startDate && value.getTime() === this.startDate.getTime()){
+			else if(inCurrentMonth && this.startDate && value.getTime() === this.startDate.getTime()){
 				btn.classList.add('datepicker-selected');
 			}
 
