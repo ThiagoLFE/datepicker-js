@@ -28,6 +28,8 @@ class Datepicker {
 		this.month     = month ?? now.getMonth();
 		this.onSelect  = config.onSelect ?? null;
 		this.ranged    = config.ranged   ?? false;
+		this.minDate   = config.minDate  ?? null;
+		this.maxDate   = config.maxDate  ?? null;
 		this.startDate = null;
 		this.endDate   = null;
 
@@ -59,13 +61,50 @@ class Datepicker {
 		this._render();
 	}
 
+	_prevMonth() {
+		if(this.month === 0){ this.month = 11; this.year--; }
+		else { this.month--; }
+		this._render();
+	}
+
+	_nextMonth() {
+		if(this.month === 11){ this.month = 0; this.year++; }
+		else { this.month++; }
+		this._render();
+	}
+
 	_render() {
 		this.element.innerHTML = '';
 
+		// Header
+		const header = document.createElement('div');
+		header.className = 'datepicker-header';
+
+		const prevBtn = document.createElement('button');
+		prevBtn.innerText = '<';
+		prevBtn.addEventListener('click', (ev) => { ev.preventDefault(); this._prevMonth(); });
+
+		const nextBtn = document.createElement('button');
+		nextBtn.innerText = '>';
+		nextBtn.addEventListener('click', (ev) => { ev.preventDefault(); this._nextMonth(); });
+
+		const label = document.createElement('span');
+		label.innerText = new Date(this.year, this.month, 1)
+			.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+		header.appendChild(prevBtn);
+		header.appendChild(label);
+		header.appendChild(nextBtn);
+		this.element.appendChild(header);
+
+		// Grid
+		const grid = document.createElement('div');
+		grid.className = 'datepicker-grid';
+
 		for(let i = 0; i < weekdayLabels.length; i++){
-			let label = document.createElement('span');
-			label.innerText = weekdayLabels[i];
-			this.element.appendChild(label);
+			let lbl = document.createElement('span');
+			lbl.innerText = weekdayLabels[i];
+			grid.appendChild(lbl);
 		}
 
 		const dayOffset = offsetOfFirstDay(this.year, this.month);
@@ -91,14 +130,20 @@ class Datepicker {
 				value.setDate(day);
 			}
 
+			if((this.minDate && value < this.minDate) || (this.maxDate && value > this.maxDate)){
+				btn.setAttribute('disabled', true);
+			}
+
 			if(this.startDate && this.endDate){
 				const t = value.getTime();
 				if(t === this.startDate.getTime() || t === this.endDate.getTime()){
 					btn.classList.add('datepicker-selected');
-				} else if(value > this.startDate && value < this.endDate){
+				}
+				else if(value > this.startDate && value < this.endDate){
 					btn.classList.add('datepicker-range');
 				}
-			} else if(this.startDate && value.getTime() === this.startDate.getTime()){
+			}
+			else if(this.startDate && value.getTime() === this.startDate.getTime()){
 				btn.classList.add('datepicker-selected');
 			}
 
@@ -108,8 +153,10 @@ class Datepicker {
 			});
 
 			btn.innerText = day;
-			this.element.appendChild(btn);
+			grid.appendChild(btn);
 		}
+
+		this.element.appendChild(grid);
 	}
 
 	mount(container) {
@@ -120,5 +167,7 @@ class Datepicker {
 const picker = new Datepicker(2026, 10, {
 	ranged: true,
 	onSelect: (start, end) => console.log([start, end]),
+	minDate: new Date(),
 });
+
 picker.mount(document.querySelector("body"));

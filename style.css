@@ -4,11 +4,27 @@ body {
 }
 
 .datepicker {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	width: 240px;
+	font-family: monospace;
+}
+
+.datepicker-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.datepicker-header span {
+	font-size: 0.85rem;
+}
+
+.datepicker-grid {
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	gap: 2px;
-	width: 240px;
-	font-family: monospace;
 }
 
 .datepicker button {
