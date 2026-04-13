@@ -21,7 +21,7 @@ function offsetOfFirstDay(year, month){
 	return new Date(year, month, 1).getDay();
 }
 
-class Datepicker {
+export class Datepicker {
 	constructor(year, month, config = {}) {
 		const now = new Date();
 		this.year      = year ?? now.getFullYear();
@@ -36,7 +36,7 @@ class Datepicker {
 		this.double    = config.double   ?? false;
 
 		this.element = document.createElement('div');
-		this.element.className = this.double ? 'datepicker double' : 'datepicker';
+		this.element.className = this.double ? 'datepicker datepicker-double' : 'datepicker';
 
 		this._render();
 	}
@@ -97,6 +97,7 @@ class Datepicker {
 
 		for(let i = 0; i < 42; i++){
 			let btn   = document.createElement('button');
+			btn.className = 'datepicker-cell';
 			let day   = i + 1 - dayOffset;
 			let value;
 
@@ -161,10 +162,12 @@ class Datepicker {
 		header.className = 'datepicker-header';
 
 		const prevBtn = document.createElement('button');
+		prevBtn.className = 'datepicker-header-nav';
 		prevBtn.innerText = '<';
 		prevBtn.addEventListener('click', (ev) => { ev.preventDefault(); this._prevMonth(); });
 
 		const nextBtn = document.createElement('button');
+		nextBtn.className = 'datepicker-header-nav';
 		nextBtn.innerText = '>';
 		nextBtn.addEventListener('click', (ev) => { ev.preventDefault(); this._nextMonth(); });
 
@@ -205,15 +208,12 @@ class Datepicker {
 	}
 
 	mount(container) {
+		if(typeof(container) == 'string'){
+			container = document.querySelector(container);
+		}
 		container.appendChild(this.element);
 	}
 }
 
-const picker = new Datepicker(2026, 8, {
-	ranged: true,
-	onSelect: (start, end) => console.log([start, end]),
-	// minDate: new Date(),
-	double: true,
-});
+window.Datepick = { Datepicker };
 
-picker.mount(document.querySelector("body"));
