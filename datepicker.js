@@ -26,13 +26,14 @@ class Datepicker {
 		const now = new Date();
 		this.year      = year ?? now.getFullYear();
 		this.month     = month ?? now.getMonth();
+		this.startDate = null;
+		this.endDate   = null;
+
 		this.onSelect  = config.onSelect ?? null;
 		this.ranged    = config.ranged   ?? false;
 		this.minDate   = config.minDate  ?? null;
 		this.maxDate   = config.maxDate  ?? null;
 		this.double    = config.double   ?? false;
-		this.startDate = null;
-		this.endDate   = null;
 
 		this.element = document.createElement('div');
 		this.element.className = this.double ? 'datepicker double' : 'datepicker';
@@ -95,7 +96,7 @@ class Datepicker {
 		for(let i = 0; i < 35; i++){
 			let btn   = document.createElement('button');
 			let day   = i + 1 - dayOffset;
-			let value = new Date(year, month, 1);
+			let value;
 
 			let inCurrentMonth = true;
 
@@ -103,17 +104,16 @@ class Datepicker {
 				btn.setAttribute('disabled', true);
 				inCurrentMonth = false;
 				day = i - numDays + 1 - dayOffset;
-				value.setDate(value.getDate() + numDays);
+				value = new Date(year, month + 1, day);
 			}
 			else if(day <= 0){
-				btn.setAttribute('disabled', true);
 				inCurrentMonth = false;
 				day = daysInPreviousMonth(year, month)
 					- offsetOfFirstDay(year, month) + i + 1;
-				value.setDate(value.getDate() - 1);
+				value = new Date(year, month - 1, day);
 			}
 			else {
-				value.setDate(day);
+				value = new Date(year, month, day);
 			}
 
 			if((this.minDate && value < this.minDate) || (this.maxDate && value > this.maxDate)){
@@ -204,11 +204,11 @@ class Datepicker {
 	}
 }
 
-const picker = new Datepicker(2026, 10, {
-	ranged: true,
+const picker = new Datepicker(2026, 8, {
+	ranged: false,
 	onSelect: (start, end) => console.log([start, end]),
 	minDate: new Date(),
-double:true,
+	double: false,
 });
 
 picker.mount(document.querySelector("body"));
