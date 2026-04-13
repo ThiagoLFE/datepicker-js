@@ -22,11 +22,12 @@ function offsetOfFirstDay(year, month){
 }
 
 class Datepicker {
-	constructor(year, month, onSelect) {
+	constructor(year, month, config = {}) {
 		const now = new Date();
 		this.year      = year ?? now.getFullYear();
 		this.month     = month ?? now.getMonth();
-		this.onSelect  = onSelect ?? null;
+		this.onSelect  = config.onSelect ?? null;
+		this.ranged    = config.ranged   ?? false;
 		this.startDate = null;
 		this.endDate   = null;
 
@@ -37,17 +38,23 @@ class Datepicker {
 	}
 
 	_handleClick(date) {
-		if(!this.startDate || (this.startDate && this.endDate)){
+		if(this.ranged){
+			if(!this.startDate || (this.startDate && this.endDate)){
+				this.startDate = date;
+				this.endDate   = null;
+			} else {
+				if(date < this.startDate){
+					this.endDate   = this.startDate;
+					this.startDate = date;
+				} else {
+					this.endDate = date;
+				}
+				if(this.onSelect) this.onSelect(this.startDate, this.endDate);
+			}
+		} else {
 			this.startDate = date;
 			this.endDate   = null;
-		} else {
-			if(date < this.startDate){
-				this.endDate   = this.startDate;
-				this.startDate = date;
-			} else {
-				this.endDate = date;
-			}
-			if(this.onSelect) this.onSelect(this.startDate, this.endDate);
+			if(this.onSelect) this.onSelect(this.startDate);
 		}
 		this._render();
 	}
@@ -110,5 +117,8 @@ class Datepicker {
 	}
 }
 
-const picker = new Datepicker(2026, 10, (start, end) => console.log([start, end]));
+const picker = new Datepicker(2026, 10, {
+	ranged: true,
+	onSelect: (start, end) => console.log([start, end]),
+});
 picker.mount(document.querySelector("body"));
