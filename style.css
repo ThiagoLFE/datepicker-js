@@ -11,6 +11,15 @@ body {
 	font-family: monospace;
 }
 
+.datepicker.double {
+	width: auto;
+}
+
+.datepicker-months {
+	display: flex;
+	gap: 12px;
+}
+
 .datepicker-header {
 	display: flex;
 	justify-content: space-between;
